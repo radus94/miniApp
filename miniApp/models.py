@@ -24,7 +24,7 @@ class Task(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(128))
     completed: Mapped[bool] = mapped_column(default=False)
-    user: Mapped[int] = mapped_column(ForeignKey('user_id'), ondelete='CASCADE')
+    user: Mapped[int] = mapped_column(ForeignKey('users.id'), ondelete='CASCADE')
 
 async def init_db():
     async with engine.begin() as conn:
