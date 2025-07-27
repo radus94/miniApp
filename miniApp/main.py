@@ -7,6 +7,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from models import init_db
 import requests as rq
 
+class AddTask(BaseModel):
+    tg_id: int
+    title: str
+
+class CompleteTask(BaseModel):
+    id: int
+
 @asynccontextmanager
 async def lifespan(app_: FastAPI):
     await init_db()
@@ -34,3 +41,13 @@ async def profile(tg_id: int):
     user = await rq.add_user(tg_id)
     completed_count = await rq.get_completed_tasks_count(user.id)
     return {'completedTasks': completed_count}
+
+@app.post("/api/add")
+async def add_task(task: AddTask):
+    user = await rq.add_user(task.tg_id)
+    return {'status': 'ok'}
+
+@app.patch("/api/completed")
+async def completed_task(task: AddTask):
+    user = await rq.update_task(task.id)
+    return {'status': 'ok'}
